@@ -16,10 +16,18 @@ export default class GithubService {
   }
 
   async getAllOrganizationRepos(organization: string): Promise<ReposListForOrgResponseData> {
-    const { data: repos } = await this.githubService.repos.listForOrg({
-      org: organization
-    })
-    return repos
+    const allRepos = []
+
+    let currentData = []
+    for (let i = 0; i === 0 || currentData.length > 0; i++) {
+      const { data: repos } = await this.githubService.repos.listForOrg({
+        org: organization,
+        page: i
+      })
+      currentData = repos
+      allRepos.push(...repos)
+    }
+    return allRepos
   }
 
   compareTwoBranches(params: compareTwoBranchesParams): Promise<compareTwoBranchesResponse> {

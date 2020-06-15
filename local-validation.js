@@ -12,8 +12,4 @@ function checkEnvExistsLocally() {
   }
 }
 
-function localValidation() {
-  checkEnvExistsLocally()
-}
-
-localValidation()
+checkEnvExistsLocally()
