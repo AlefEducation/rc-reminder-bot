@@ -19,7 +19,7 @@ export default class GithubService {
     const allRepos = []
 
     let currentData = []
-    for (let i = 0; i === 0 || currentData.length > 0; i++) {
+    for (let i = 1; i === 1 || currentData.length > 0; i++) {
       const { data: repos } = await this.githubService.repos.listForOrg({
         org: organization,
         page: i
