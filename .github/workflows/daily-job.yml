@@ -23,6 +23,6 @@ jobs:
         env:
           ORGANIZATION_NAME: ${{ secrets.ORGANIZATION_NAME }}
           BASE_BRANCH: develop
-          HEAD_BRANCH: master
+          HEAD_BRANCH: rc
           GH_ACCESS_TOKEN: ${{ secrets.GH_ACCESS_TOKEN }}
           SLACK_CHANNEL_WEBHOOK_URL: ${{ secrets.SLACK_CHANNEL_WEBHOOK_URL }}
