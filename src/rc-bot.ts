@@ -86,7 +86,7 @@ export default class RCBot {
     })
 
     const allBranchesInfos = await Promise.all(allBranchesResponses)
-    return allBranchesInfos.filter(Boolean)
+    return allBranchesInfos.filter(Boolean).filter((repo) => repo.delay < 300)
   }
 
   getReminderMessage(repos: RepoInfo[]): string {

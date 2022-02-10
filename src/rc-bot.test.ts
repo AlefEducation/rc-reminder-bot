@@ -150,7 +150,7 @@ describe('RCBot', () => {
             },
             commit: {
               committer: {
-                date: moment().subtract(666, 'days')
+                date: moment().subtract(66, 'days')
               }
             }
           }
@@ -169,7 +169,7 @@ describe('RCBot', () => {
       '-----------------\n' +
       'Repo: react\n' +
       'Author of not updated commit: Thor\n' +
-      'Delay: 666 days\n'
+      'Delay: 66 days\n'
 
     expect(slackBotService.postMessageToReminderChannel).toHaveBeenCalledWith(expectedMessage)
   })
@@ -280,5 +280,63 @@ describe('RCBot', () => {
         new SlackBotService('aaa')
       )
     }).toThrow('config do not have all required values')
+  })
+
+  it('send message only about repos where duration between rc and develop is less than 300 days', async () => {
+    const allRepos = [
+      { name: 'react', owner: { login: 'facebook' } },
+      { name: 'angular-js', owner: { login: 'google' } }
+    ]
+
+    const firstBranchDiff = {
+      data: {
+        files: ['some.js'],
+        commits: [
+          {
+            author: {
+              login: 'Thor'
+            },
+            commit: {
+              committer: {
+                date: moment().subtract(299, 'days')
+              }
+            }
+          }
+        ]
+      }
+    }
+
+    const secondBranchDiff = {
+      data: {
+        files: ['some.js'],
+        commits: [
+          {
+            author: {
+              login: 'Thor'
+            },
+            commit: {
+              committer: {
+                date: moment().subtract(301, 'days')
+              }
+            }
+          }
+        ]
+      }
+    }
+
+    mockAllValues(allRepos, firstBranchDiff, secondBranchDiff)
+
+    await rcBot.checkBranches()
+
+    expect(slackBotService.postMessageToReminderChannel).toHaveBeenCalledTimes(1)
+
+    const expectedMessage =
+      'REPOSITORIES LISTED BELOW ARE NOT UPDATED PROPERLY. PLEASE MERGE MASTER TO DEVELOP BRANCH.\n' +
+      '-----------------\n' +
+      'Repo: react\n' +
+      'Author of not updated commit: Thor\n' +
+      'Delay: 299 days\n'
+
+    expect(slackBotService.postMessageToReminderChannel).toHaveBeenCalledWith(expectedMessage)
   })
 })
